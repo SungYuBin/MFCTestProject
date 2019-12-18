@@ -10,6 +10,10 @@
 #include <windows.h>
 #include <stdlib.h>//atoi와 itoa함수를 위한 헤더이다
 
+#include "resource.h"
+
+#include <sstream>
+
 
 
 
@@ -180,6 +184,8 @@ HCURSOR CMFCTestFileDlg::OnQueryDragIcon()
 
 
 
+//기존의 추가방식은 멀티 데이터에 데이터를 set해서 진행했으나 여기서는 그렇게 진행하기에는 조금 무리가있는듯합니다.
+
 void CMFCTestFileDlg::OnBnClickedButtonAdd()
 {
 	CString name = _T("");
@@ -187,9 +193,10 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 
 	if (name.IsEmpty() != true)
 	{
+	
 		CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(name);
-
 		auto selectedListNode = m_propertyList.GetSelectedProPerty();
+
 		if (selectedListNode!=nullptr)
 		{
 			selectedListNode->AddSubItem(pGroupInfo);
@@ -199,8 +206,8 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 		{
 			m_propertyList.AddProperty(pGroupInfo);
 		}
-
-
+		pAttrItemList.push_back(pGroupInfo);
+		
 	}
 	else
 	{
@@ -225,7 +232,8 @@ void CMFCTestFileDlg::OnBnClickedButtonCancle() //선택한 값을 삭제합니�
 }
 
 
-void CMFCTestFileDlg::OnBnClickedButtonRefresh()
+//기능::모든내용을 삭제하고 다시 원래 구조대로 다시 표출합니다.
+void CMFCTestFileDlg::OnBnClickedButtonRefresh() 
 {
 	AfxMessageBox(L"모두 지웁니다.");
 	while (m_propertyList.GetPropertyCount() > 0) //전부삭제
@@ -233,8 +241,25 @@ void CMFCTestFileDlg::OnBnClickedButtonRefresh()
 		CMFCPropertyGridProperty* prop = m_propertyList.GetProperty(0);
 		m_propertyList.DeleteProperty(prop);
 	}
-	auto fsf = m_propertyList.GetPropertyCount();
-	AfxMessageBox(_T("sdfsf"));
+	//구조성공
+
+	//기존의 방식: 전부 삭제한 이후 , 저장된 값을 불러와서 진행합니다.
+
+	for (auto parent = pAttrItemList.begin(); parent != pAttrItemList.end(); parent++) 
+	{
+		try 
+		{
+			CMFCPropertyGridProperty* child = *parent;
+			auto dfsf = child->GetName();
+			m_propertyList.AddProperty(child);// attribute로 추가합니다.
+
+
+		}
+		catch (int exceptionCode)
+		{
+
+		}
+	}
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
@@ -247,6 +272,9 @@ bool CMFCTestFileDlg::ProgertyListInit() //기본셋팅입니다.
 
 	CMFCPropertyGridProperty* pGroupInfodfs = new CMFCPropertyGridProperty(_T("테스트 중입니다만"));
 	pGroupInfo->AddSubItem(pGroupInfodfs);
+
+	pAttrItemList.push_back(pGroupInfo);
+	pAttrItemList.push_back(pGroupInfodfs);
 
 	return false;
 }

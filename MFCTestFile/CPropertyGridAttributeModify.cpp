@@ -24,7 +24,7 @@ void CPropertyGridAttributeModify::OnLButtonDown(UINT nFlags, CPoint point) //³ë
 	if (pProp != nullptr)
 	{
 		SetSelectedProPerty(pProp);
-	}
+	} 
 	else 
 	{
 		SetSelectedProPerty(nullptr);

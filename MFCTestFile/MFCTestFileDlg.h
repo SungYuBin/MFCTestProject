@@ -2,8 +2,10 @@
 // MFCTestFileDlg.h: 헤더 파일
 //
 
+
 #pragma once
 #include"CPropertyGridAttributeModify.h"
+#include <vector>
 
 // CMFCTestFileDlg 대화 상자
 class CMFCTestFileDlg : public CDialogEx
@@ -38,7 +40,7 @@ public:
 	CEdit propertyName;
 	//CMFCPropertyGridCtrl m_propertyList;
 	CPropertyGridAttributeModify m_propertyList;
-	
+	std::vector<CMFCPropertyGridProperty*> pAttrItemList; //모든내역을 저장할 Attribute입니다.
 	bool ProgertyListInit();
 
 
