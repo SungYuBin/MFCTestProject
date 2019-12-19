@@ -42,12 +42,17 @@ public:
 	CEdit propertyName;
 	//CMFCPropertyGridCtrl m_propertyList;
 	CPropertyGridAttributeModify m_propertyList;
+
+	int SelectedPropertyNum;
+
 	std::vector<CMFCPropertyGridProperty*> pAttrItemList; //모든내역을 저장할 Attribute입니다.
 	bool ProgertyListInit();
 	unsigned CMFCTestFileDlg::GetATIX(unsigned natc, unsigned parentIndex);
 	std::vector<F_ATTR*> proInforamtion;
 	MultiData* InsertPropertyMultiData(int multidataType, CMFCPropertyGridProperty* pGP, DWORD_PTR pointer_1, DWORD_PTR pointer_2 = NULL, DWORD_PTR pointer_3 = NULL, DWORD_PTR pointer_4 = NULL);
-
+	
+	int CMFCTestFileDlg::GetSelectedPropertyNum();
+	void CMFCTestFileDlg::SetSelectedPropertyNum(CMFCPropertyGridProperty* selected);
 
 
 

@@ -4,8 +4,6 @@ class CPropertyGridAttributeModify :public CMFCPropertyGridCtrl
 {
 public:
 
-
-
 	CPropertyGridAttributeModify();
 	virtual ~CPropertyGridAttributeModify();
 
@@ -26,9 +24,12 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	void SetSelectedProPerty(CMFCPropertyGridProperty* selected);
 	CMFCPropertyGridProperty* GetSelectedProPerty();
+	void SetSelectedPropertyNum(CMFCPropertyGridProperty* selected);
+	int GetSelectedPropertyNum();
 
 
 private:
 	CMFCPropertyGridProperty* SelectedProperty;
+	int SelectedPropertyNum;
 };
 

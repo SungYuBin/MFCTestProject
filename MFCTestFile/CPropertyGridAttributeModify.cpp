@@ -22,10 +22,28 @@ void CPropertyGridAttributeModify::OnLButtonDown(UINT nFlags, CPoint point) //³ë
 	if (pProp != nullptr)
 	{
 		SetSelectedProPerty(pProp);
+
+		auto count = this->GetPropertyCount();
+
+		for (int i = 0; i < count; i++)
+		{
+			auto property = this->GetProperty(i);
+			if (property == pProp)
+			{
+				CString Depthstring;
+				Depthstring.Format(_T("index°ª:%d ::::\n"), i);
+				OutputDebugString(Depthstring);
+
+
+			}
+		}
 	} 
 	else 
 	{
 		SetSelectedProPerty(nullptr);
+	
+
+
 	}
 	CMFCPropertyGridCtrl::OnLButtonDown(nFlags, point);
 }
@@ -39,3 +57,16 @@ CMFCPropertyGridProperty* CPropertyGridAttributeModify::GetSelectedProPerty()
 {
 	return SelectedProperty;
 }
+
+void CPropertyGridAttributeModify::SetSelectedPropertyNum(CMFCPropertyGridProperty* selected)
+{
+	SelectedPropertyNum = 0;
+}
+
+int CPropertyGridAttributeModify::GetSelectedPropertyNum()
+{
+	return SelectedPropertyNum;
+}
+
+
+

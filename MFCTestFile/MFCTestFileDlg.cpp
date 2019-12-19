@@ -122,12 +122,6 @@ BOOL CMFCTestFileDlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
-
-
-
-
-
-
 }
 
 void CMFCTestFileDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -188,9 +182,7 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 
 	if (name.IsEmpty() != true)
 	{
-
-		unsigned parentIndex = 0;
-
+		int parentIndex = 0;
 		CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(name);
 		ATTR* attr = new ATTR();
 		F_ATTR* attrParent = NULL;
@@ -205,12 +197,6 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 			proInforamtion.push_back(attrParent);
 		}
 
-		attr->m_atix = GetATIX(attr->m_natc, parentIndex);
-		attr->m_paix = parentIndex;
-		attr->m_atin = 1;
-		attr->m_atvl = L"";
-		attrParent->m_arr.push_back(attr);
-
 		MultiData *multiData = InsertPropertyMultiData(111, pGroupInfo, (DWORD_PTR)pGroupInfo, (DWORD_PTR)attr);
 		pGroupInfo->SetData((DWORD_PTR)multiData);
 
@@ -218,13 +204,28 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 		if (selectedListNode!=nullptr)
 		{
 			selectedListNode->AddSubItem(pGroupInfo);
+			SetSelectedPropertyNum(selectedListNode);
+			parentIndex=GetSelectedPropertyNum();
+			attr->tempAA = selectedListNode;
+			//AfxMessageBox(L"모두 지웁니다.");
+			selectedListNode->Expand(FALSE);
+			selectedListNode->Expand(TRUE);
+
 		}
 		else //비어있는게 아니라면
 		{
 			m_propertyList.AddProperty(pGroupInfo);
 		}
 		pAttrItemList.push_back(pGroupInfo);
-		
+
+		attr->m_atix = GetATIX(attr->m_natc, parentIndex);
+		attr->m_paix = parentIndex;
+		attr->m_atin = 1;
+		attr->m_atvl = L"";
+		attr->name = name;
+		attrParent->m_arr.push_back(attr);
+
+		//m_propertyList.ExpandAll();
 	}
 	else
 	{
@@ -234,7 +235,6 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
-
 
 void CMFCTestFileDlg::OnBnClickedButtonCancle() //선택한 값을 삭제합니다.
 {
@@ -248,35 +248,36 @@ void CMFCTestFileDlg::OnBnClickedButtonCancle() //선택한 값을 삭제합니�
 
 }
 
-
 //기능::모든내용을 삭제하고 다시 원래 구조대로 다시 표출합니다.
 void CMFCTestFileDlg::OnBnClickedButtonRefresh() 
 {
 	AfxMessageBox(L"모두 지웁니다.");
 	while (m_propertyList.GetPropertyCount() > 0) //전부삭제
 	{
-		CMFCPropertyGridProperty* prop = m_propertyList.GetProperty(0);
-		m_propertyList.DeleteProperty(prop);
+		//CMFCPropertyGridProperty* prop = m_propertyList.GetProperty(0);
+		//m_propertyList.DeleteProperty(prop);
+		m_propertyList.RemoveAll();
+		m_propertyList.ExpandAll();
 	}
 	//구조성공
 
 	//기존의 방식: 전부 삭제한 이후 , 저장된 값을 불러와서 진행합니다.
 
- 	for (auto i = pAttrItemList.begin(); i != pAttrItemList.end(); i++) 
-	{
-		try 
-		{
-			CMFCPropertyGridProperty* currentNode = *i;
-			//auto dfsf = currentNode->GetName();
-			m_propertyList.AddProperty(currentNode);// attribute로 추가합니다.
+ //	for (auto i = pAttrItemList.begin(); i != pAttrItemList.end(); i++) 
+	//{
+	//	try 
+	//	{
+	//		CMFCPropertyGridProperty* currentNode = *i;
+	//		m_propertyList.AddProperty(currentNode);// attribute로 추가합니다.
 
 
-		}
-		catch (int exceptionCode)
-		{
+	//	}
+	//	catch (int exceptionCode)
+	//	{
 
-		}
-	}
+	//	}
+	//}
+
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
@@ -284,14 +285,14 @@ void CMFCTestFileDlg::OnBnClickedButtonRefresh()
 
 bool CMFCTestFileDlg::ProgertyListInit() //기본셋팅입니다.
 {
-	CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(_T("테스트 중입니다만"));
-	m_propertyList.AddProperty(pGroupInfo);
+	//CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(_T("테스트 중입니다만"));
+	//m_propertyList.AddProperty(pGroupInfo);
 
-	CMFCPropertyGridProperty* pGroupInfodfs = new CMFCPropertyGridProperty(_T("테스트 중입니다만"));
-	pGroupInfo->AddSubItem(pGroupInfodfs);
+	//CMFCPropertyGridProperty* pGroupInfodfs = new CMFCPropertyGridProperty(_T("테스트 중입니다만"));
+	//pGroupInfo->AddSubItem(pGroupInfodfs);
 
-	pAttrItemList.push_back(pGroupInfo);
-	pAttrItemList.push_back(pGroupInfodfs);
+	//pAttrItemList.push_back(pGroupInfo);
+	//pAttrItemList.push_back(pGroupInfodfs);
 		
 	return false;
 }
@@ -345,3 +346,34 @@ MultiData* CMFCTestFileDlg::InsertPropertyMultiData(int multidataType, CMFCPrope
 
 	return multiData;
 }
+
+
+void CMFCTestFileDlg::SetSelectedPropertyNum(CMFCPropertyGridProperty* selected)
+{
+	auto count = pAttrItemList.size();
+	for (int i = 0; i < count; i++) 
+	{
+		auto property = pAttrItemList[i];
+
+		if (property== m_propertyList.GetSelectedProPerty())
+		{
+			CString Depthstring;
+			Depthstring.Format(_T("index값:%d ::::\n"), i);
+			OutputDebugString(Depthstring);
+
+			 
+
+
+
+
+		}
+	}
+}
+
+int CMFCTestFileDlg::GetSelectedPropertyNum()
+{
+	return SelectedPropertyNum;
+}
+
+
+
