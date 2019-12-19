@@ -184,6 +184,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CPropertyGridAttributeModify.h" />
+    <ClInclude Include="F_ATTR.h" />
     <ClInclude Include="MFCTestFile.h" />
     <ClInclude Include="MFCTestFileDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -192,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPropertyGridAttributeModify.cpp" />
+    <ClCompile Include="F_ATTR.cpp" />
     <ClCompile Include="MFCTestFile.cpp" />
     <ClCompile Include="MFCTestFileDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

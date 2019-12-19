@@ -245,13 +245,13 @@ void CMFCTestFileDlg::OnBnClickedButtonRefresh()
 
 	//기존의 방식: 전부 삭제한 이후 , 저장된 값을 불러와서 진행합니다.
 
-	for (auto parent = pAttrItemList.begin(); parent != pAttrItemList.end(); parent++) 
+ 	for (auto i = pAttrItemList.begin(); i != pAttrItemList.end(); i++) 
 	{
 		try 
 		{
-			CMFCPropertyGridProperty* child = *parent;
-			auto dfsf = child->GetName();
-			m_propertyList.AddProperty(child);// attribute로 추가합니다.
+			CMFCPropertyGridProperty* currentNode = *i;
+			//auto dfsf = currentNode->GetName();
+			m_propertyList.AddProperty(currentNode);// attribute로 추가합니다.
 
 
 		}
@@ -275,7 +275,7 @@ bool CMFCTestFileDlg::ProgertyListInit() //기본셋팅입니다.
 
 	pAttrItemList.push_back(pGroupInfo);
 	pAttrItemList.push_back(pGroupInfodfs);
-
+		
 	return false;
 }
 
