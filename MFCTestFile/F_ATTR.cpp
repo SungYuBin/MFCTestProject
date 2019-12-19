@@ -64,7 +64,7 @@ BOOL F_ATTR::Save(CFile *file)
 	//}
 	//file->Write(&NonPrintableCharacter::fieldTerminator, 1);
 
-	//return TRUE;
+	return TRUE;
 }
 
 

@@ -9,12 +9,9 @@
 
 #include <windows.h>
 #include <stdlib.h>//atoi와 itoa함수를 위한 헤더이다
-
 #include "resource.h"
-
 #include <sstream>
-
-
+#include"MultiData.h"
 
 
 
@@ -184,8 +181,6 @@ HCURSOR CMFCTestFileDlg::OnQueryDragIcon()
 
 
 
-//기존의 추가방식은 멀티 데이터에 데이터를 set해서 진행했으나 여기서는 그렇게 진행하기에는 조금 무리가있는듯합니다.
-
 void CMFCTestFileDlg::OnBnClickedButtonAdd()
 {
 	CString name = _T("");
@@ -193,14 +188,36 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 
 	if (name.IsEmpty() != true)
 	{
-	
-		CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(name);
-		auto selectedListNode = m_propertyList.GetSelectedProPerty();
 
+		unsigned parentIndex = 0;
+
+		CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(name);
+		ATTR* attr = new ATTR();
+		F_ATTR* attrParent = NULL;
+		//최종 저장된 값은
+		if (proInforamtion.begin() != proInforamtion.end())
+		{
+			attrParent = *proInforamtion.begin();
+		}
+		else
+		{
+			attrParent = new F_ATTR();
+			proInforamtion.push_back(attrParent);
+		}
+
+		attr->m_atix = GetATIX(attr->m_natc, parentIndex);
+		attr->m_paix = parentIndex;
+		attr->m_atin = 1;
+		attr->m_atvl = L"";
+		attrParent->m_arr.push_back(attr);
+
+		MultiData *multiData = InsertPropertyMultiData(111, pGroupInfo, (DWORD_PTR)pGroupInfo, (DWORD_PTR)attr);
+		pGroupInfo->SetData((DWORD_PTR)multiData);
+
+		auto selectedListNode = m_propertyList. GetSelectedProPerty();
 		if (selectedListNode!=nullptr)
 		{
 			selectedListNode->AddSubItem(pGroupInfo);
-			
 		}
 		else //비어있는게 아니라면
 		{
@@ -280,4 +297,51 @@ bool CMFCTestFileDlg::ProgertyListInit() //기본셋팅입니다.
 }
 
 
+unsigned CMFCTestFileDlg::GetATIX(unsigned natc, unsigned parentIndex)
+{
+	unsigned index = 1;
 
+	for (auto itorParent = proInforamtion.begin(); itorParent != proInforamtion.end(); itorParent++)
+	{
+		F_ATTR* attrParent = *itorParent;
+
+		for (auto itor = attrParent->m_arr.begin(); itor != attrParent->m_arr.end(); itor++)
+		{
+			ATTR* attr = *itor;
+
+			if (attr->m_paix == parentIndex)
+			{
+				index = attr->m_atix + 1;
+			}
+		}
+	}
+
+	return index;
+}
+
+MultiData* CMFCTestFileDlg::InsertPropertyMultiData(int multidataType, CMFCPropertyGridProperty* pGP, DWORD_PTR pointer_1, DWORD_PTR pointer_2, DWORD_PTR pointer_3, DWORD_PTR pointer_4)
+{
+	MultiData* multiData = new MultiData();
+
+	/*if (multidataType % 100 > 10)
+	{
+		m_propertyAttributeMultiData.insert(
+			std::unordered_map<CMFCPropertyGridProperty*, MultiData*>::value_type(pGP, multiData)
+		);
+	}
+	else
+	{
+		m_propertyVectorMultiData.insert(
+			std::unordered_map<CMFCPropertyGridProperty*, MultiData*>::value_type(pGP, multiData)
+		);
+	}*/
+
+	multiData->type = multidataType;
+	//multiData->data.push_back((DWORD_PTR)m_cell);
+	multiData->data.push_back((DWORD_PTR)pointer_1);
+	multiData->data.push_back((DWORD_PTR)pointer_2);
+	multiData->data.push_back((DWORD_PTR)pointer_3);
+	multiData->data.push_back((DWORD_PTR)pointer_4);
+
+	return multiData;
+}

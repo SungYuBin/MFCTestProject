@@ -5,7 +5,9 @@
 
 #pragma once
 #include"CPropertyGridAttributeModify.h"
+#include "F_ATTR.h"
 #include <vector>
+#include"MultiData.h"
 
 // CMFCTestFileDlg 대화 상자
 class CMFCTestFileDlg : public CDialogEx
@@ -42,6 +44,11 @@ public:
 	CPropertyGridAttributeModify m_propertyList;
 	std::vector<CMFCPropertyGridProperty*> pAttrItemList; //모든내역을 저장할 Attribute입니다.
 	bool ProgertyListInit();
+	unsigned CMFCTestFileDlg::GetATIX(unsigned natc, unsigned parentIndex);
+	std::vector<F_ATTR*> proInforamtion;
+	MultiData* InsertPropertyMultiData(int multidataType, CMFCPropertyGridProperty* pGP, DWORD_PTR pointer_1, DWORD_PTR pointer_2 = NULL, DWORD_PTR pointer_3 = NULL, DWORD_PTR pointer_4 = NULL);
+
+
 
 
 //	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);

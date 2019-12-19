@@ -19,8 +19,6 @@ void CPropertyGridAttributeModify::OnLButtonDown(UINT nFlags, CPoint point) //³ë
 {
 	CMFCPropertyGridProperty::ClickArea clickArea;
 	CMFCPropertyGridProperty *pProp = HitTest(point, &clickArea);
-
-
 	if (pProp != nullptr)
 	{
 		SetSelectedProPerty(pProp);
@@ -29,9 +27,6 @@ void CPropertyGridAttributeModify::OnLButtonDown(UINT nFlags, CPoint point) //³ë
 	{
 		SetSelectedProPerty(nullptr);
 	}
-
-
-
 	CMFCPropertyGridCtrl::OnLButtonDown(nFlags, point);
 }
 
