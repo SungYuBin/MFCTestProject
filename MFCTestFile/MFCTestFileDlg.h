@@ -42,8 +42,8 @@ public:
 	afx_msg void OnBnClickedButtonRefresh();
 	CEdit propertyName;
 	CPropertyGridAttributeModify m_propertyList;
-	int SelectedPropertyNum;
-	int NodeNum = 1;
+	int SelectedPropertyNum; //선택된 노드의 값
+	int NodeNum = 1;//자기 자신의 노드값입니다.
 
 
 	R_FeatureRecord* m_pFeature=nullptr;
