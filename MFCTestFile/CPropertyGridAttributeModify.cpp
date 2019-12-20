@@ -27,7 +27,12 @@ void CPropertyGridAttributeModify::OnLButtonDown(UINT nFlags, CPoint point) //노
 		MultiData *multiData = (MultiData *)pProp->GetData();
 		ATTR *attr = (ATTR *)multiData->data[2];
 		Nodenumber = attr->m_atix;
+		SetSelectedPropertyNum(Nodenumber);
 
+
+		CString Depthstring;
+		Depthstring.Format(_T("부모인덱스: %d \n"), Nodenumber);
+		OutputDebugString(Depthstring);
 	} 
 	else 
 	{

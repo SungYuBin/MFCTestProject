@@ -43,9 +43,12 @@ public:
 	CEdit propertyName;
 	CPropertyGridAttributeModify m_propertyList;
 	int SelectedPropertyNum;
+	int NodeNum = 1;
+
+
 	R_FeatureRecord* m_pFeature=nullptr;
 
-	std::vector<CMFCPropertyGridProperty*> pAttrItemList; //모든내역을 저장할 Attribute입니다.
+	//std::vector<CMFCPropertyGridProperty*> pAttrItemList; //모든내역을 저장할 Attribute입니다.
 	bool ProgertyListInit();
 	unsigned CMFCTestFileDlg::GetATIX(unsigned natc, unsigned parentIndex);
 	std::vector<F_ATTR*> proInforamtion;

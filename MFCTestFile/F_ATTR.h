@@ -37,7 +37,17 @@ struct ATTR {
 	*/
 	CString m_atvl;
 
+	/*
+	* Attribute name
+	* Format		: A()
+	* A string containing a valid value for the domain of the attribute specified by the subfields above.
+	*/
+	CString m_atname;
+
 	static const int size = 7;
+
+
+
 };
 
 class F_ATTR

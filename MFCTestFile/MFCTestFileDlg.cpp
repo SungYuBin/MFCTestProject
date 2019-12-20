@@ -63,8 +63,7 @@ CMFCTestFileDlg::CMFCTestFileDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCTESTFILE_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	m_pFeature = nullptr;
-	AfxMessageBox(L"");
+	m_pFeature = new R_FeatureRecord();
 }
 
 void CMFCTestFileDlg::DoDataExchange(CDataExchange* pDX)
@@ -200,14 +199,23 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 			m_pFeature->m_attr.push_back(attrParent);
 		}
 
+		/*auto itor = cell->m_dsgir.m_atcs->m_arrFindForCode.find(sa->code.valueString);
+		if (itor == cell->m_dsgir.m_atcs->m_arrFindForCode.end())
+		{
+			attr->m_natc = GetATCS(sa->code.valueString);
+		}
+		else
+		{
+			attr->m_natc = itor->second->m_nmcd;
+		}*/
 
 
 		auto selectedListNode = m_propertyList.GetSelectedProPerty(); //선택한값이 있는경우
 		if (selectedListNode != nullptr)
 		{
 			selectedListNode->AddSubItem(pGroupInfo);
+			SetSelectedPropertyNum(m_propertyList.GetSelectedPropertyNum());
 			parentIndex = GetSelectedPropertyNum();
-
 
 			selectedListNode->Expand(FALSE);
 			selectedListNode->Expand(TRUE);
@@ -218,25 +226,27 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 			m_propertyList.AddProperty(pGroupInfo);
 		}
 
-		attr->m_atix = GetATIX(attr->m_natc, parentIndex);
+
+		//attr->m_atix = GetATIX(attr->m_natc, parentIndex); 
+		attr->m_atix = NodeNum;
+		//자기인덱스 번호:점점 증가합니다. 오류발생: 어떤 오브젝트의 자식오브젝트로 들어갈경우에도 카운트가 정상적으로 증가해야하는데 이부분에서 문제가 있습니다.
+
 		attr->m_paix = parentIndex;
 		attr->m_atin = 1;
 		attr->m_atvl = L"";
+		attr->m_atname = name;
 		attrParent->m_arr.push_back(attr);
 														//type,CMFCPropertyGridProperty,R_FeatureRecord,ATTR
 		MultiData *multiData = InsertPropertyMultiData(111, pGroupInfo, (DWORD_PTR)m_pFeature, (DWORD_PTR)attr);
 		pGroupInfo->SetData((DWORD_PTR)multiData);
 
-		pAttrItemList.push_back(pGroupInfo);// 모든데이터를 저장합니다.
-
+		NodeNum++;
 	}
 	else
 	{
 		AfxMessageBox(L"빈 문자열은 진행할수없습니다.");
 		return;
 	}
-
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 
 void CMFCTestFileDlg::OnBnClickedButtonCancle() //선택한 값을 삭제합니다.
@@ -252,10 +262,10 @@ void CMFCTestFileDlg::OnBnClickedButtonCancle() //선택한 값을 삭제합니�
 //기능::모든내용을 삭제하고 다시 원래 구조대로 다시 표출합니다.
 void CMFCTestFileDlg::OnBnClickedButtonRefresh() 
 {
+	std::vector<CMFCPropertyGridProperty*> pAttrItemList;
+
 	while (m_propertyList.GetPropertyCount() > 0)
 	{
-		//CMFCPropertyGridProperty* prop = m_propertyList.GetProperty(0);
-		//m_propertyList.DeleteProperty(prop);
 		m_propertyList.RemoveAll();
 		m_propertyList.ExpandAll();
 	}
@@ -266,59 +276,40 @@ void CMFCTestFileDlg::OnBnClickedButtonRefresh()
 
 		for (auto itor = attrParent->m_arr.begin(); itor != attrParent->m_arr.end(); itor++)
 		{
-			auto sdfsdf = itor;
-			OutputDebugString(L"");
-		}
+			ATTR* attr = *itor;
+			CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(attr->m_atname);
 
-	}
+			MultiData *multiData = InsertPropertyMultiData(111, pGroupInfo, (DWORD_PTR)m_pFeature, (DWORD_PTR)attr);
+			pGroupInfo->SetData((DWORD_PTR)multiData); //데이터 구조를 셋팅해줍니다.
 
-
-
-	//for (int i = 0; i < pAttrItemList.size(); i++) 
-	//{
-	//	CMFCPropertyGridProperty* prop = pAttrItemList[i]; 
-	//	//해제된 메모리에 있는값을 접근하기 떄문에 문제가 발생합니다.
-	//	auto sfd = prop->GetName();
-	//	m_propertyList.AddProperty(prop);
+			pAttrItemList.push_back(pGroupInfo);
 	
-
-
-	//	OutputDebugString(L"");
-	//}
-
-
-
-
-	//다시 표출
-
-
-
-
-
-
-
-
-
-
-
-
+			//기본구조는 이렇게 이루어집니다.
+			if (attr->m_paix!= 0) 
+			{
+				if (pAttrItemList[attr->m_paix - 1]->IsGroup()) //수정내용:Attribute로 추가
+				{
+					pAttrItemList[attr->m_paix - 1]->AddSubItem(pGroupInfo);
+				}
+				else
+				{
+					pAttrItemList[attr->m_paix]->AddSubItem(pGroupInfo);
+				}
+			}
+			else
+			{
+				m_propertyList.AddProperty(pGroupInfo);
+			}
+		
+		}
+		m_propertyList.ExpandAll();
+	}
 
 }
 
 
 bool CMFCTestFileDlg::ProgertyListInit() //기본셋팅입니다.
 {
-	//CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(_T("테스트 중입니다만"));
-	//m_propertyList.AddProperty(pGroupInfo);
-
-	//CMFCPropertyGridProperty* pGroupInfodfs = new CMFCPropertyGridProperty(_T("테스트 중입니다만"));
-	//pGroupInfo->AddSubItem(pGroupInfodfs);
-
-	//pAttrItemList.push_back(pGroupInfo);
-	//pAttrItemList.push_back(pGroupInfodfs);
-		
-
-
 	return false;
 }
 
@@ -326,8 +317,7 @@ bool CMFCTestFileDlg::ProgertyListInit() //기본셋팅입니다.
 unsigned CMFCTestFileDlg::GetATIX(unsigned natc, unsigned parentIndex)
 {
 	unsigned index = 1;
-
-	for (auto itorParent = proInforamtion.begin(); itorParent != proInforamtion.end(); itorParent++)
+	for (auto itorParent = m_pFeature->m_attr.begin(); itorParent != m_pFeature->m_attr.end(); itorParent++)
 	{
 		F_ATTR* attrParent = *itorParent;
 
@@ -341,7 +331,6 @@ unsigned CMFCTestFileDlg::GetATIX(unsigned natc, unsigned parentIndex)
 			}
 		}
 	}
-
 	return index;
 }
 
@@ -358,7 +347,6 @@ MultiData* CMFCTestFileDlg::InsertPropertyMultiData(int multidataType, CMFCPrope
 
 	return multiData;
 }
-
 
 void CMFCTestFileDlg::SetSelectedPropertyNum(int selected)
 {
