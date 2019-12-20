@@ -257,6 +257,9 @@ void CMFCTestFileDlg::OnBnClickedButtonCancle() //선택한 값을 삭제합니�
 		m_propertyList.DeleteProperty(selectedListNode);
 	}
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	//예외처리 추가
+
+
 }
 
 //기능::모든내용을 삭제하고 다시 원래 구조대로 다시 표출합니다.
@@ -287,14 +290,8 @@ void CMFCTestFileDlg::OnBnClickedButtonRefresh()
 			//기본구조는 이렇게 이루어집니다.
 			if (attr->m_paix!= 0) 
 			{
-				if (pAttrItemList[attr->m_paix - 1]->IsGroup()) //수정내용:Attribute로 추가
-				{
-					pAttrItemList[attr->m_paix - 1]->AddSubItem(pGroupInfo);
-				}
-				else
-				{
-					pAttrItemList[attr->m_paix]->AddSubItem(pGroupInfo);
-				}
+				if (pAttrItemList[attr->m_paix - 1]->IsGroup()) {pAttrItemList[attr->m_paix - 1]->AddSubItem(pGroupInfo);}
+				else { pAttrItemList[attr->m_paix]->AddSubItem(pGroupInfo);}
 			}
 			else
 			{
@@ -345,7 +342,10 @@ MultiData* CMFCTestFileDlg::InsertPropertyMultiData(int multidataType, CMFCPrope
 	multiData->data.push_back((DWORD_PTR)pointer_3);
 	multiData->data.push_back((DWORD_PTR)pointer_4);
 
+
+
 	return multiData;
+
 }
 
 void CMFCTestFileDlg::SetSelectedPropertyNum(int selected)
@@ -357,6 +357,13 @@ int CMFCTestFileDlg::GetSelectedPropertyNum()
 {
 	return SelectedPropertyNum;
 }
+
+
+CMFCTestFileDlg::~CMFCTestFileDlg()
+{
+	delete(m_pFeature);
+}
+
 
 
 
