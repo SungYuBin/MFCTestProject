@@ -198,18 +198,6 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 			attrParent = new F_ATTR();
 			m_pFeature->m_attr.push_back(attrParent);
 		}
-
-		/*auto itor = cell->m_dsgir.m_atcs->m_arrFindForCode.find(sa->code.valueString);
-		if (itor == cell->m_dsgir.m_atcs->m_arrFindForCode.end())
-		{
-			attr->m_natc = GetATCS(sa->code.valueString);
-		}
-		else
-		{
-			attr->m_natc = itor->second->m_nmcd;
-		}*/
-
-
 		auto selectedListNode = m_propertyList.GetSelectedProPerty(); //선택한값이 있는경우
 		if (selectedListNode != nullptr)
 		{
@@ -226,11 +214,7 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 			m_propertyList.AddProperty(pGroupInfo);
 		}
 
-
-		//attr->m_atix = GetATIX(attr->m_natc, parentIndex); 
 		attr->m_atix = NodeNum;
-		//자기인덱스 번호:점점 증가합니다. 오류발생: 어떤 오브젝트의 자식오브젝트로 들어갈경우에도 카운트가 정상적으로 증가해야하는데 이부분에서 문제가 있습니다.
-
 		attr->m_paix = parentIndex;
 		attr->m_atin = 1;
 		attr->m_atvl = L"";
@@ -254,8 +238,17 @@ void CMFCTestFileDlg::OnBnClickedButtonCancle() //선택한 값을 삭제합니�
 	auto selectedListNode = m_propertyList.GetSelectedProPerty();
 	if (selectedListNode)
 	{
+		auto Data = (MultiData*)selectedListNode->GetData();
+		delete Data;
+
 		m_propertyList.DeleteProperty(selectedListNode);
+		
 	}
+	
+
+
+
+
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	//예외처리 추가
 
@@ -283,6 +276,7 @@ void CMFCTestFileDlg::OnBnClickedButtonRefresh()
 			CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(attr->m_atname);
 
 			MultiData *multiData = InsertPropertyMultiData(111, pGroupInfo, (DWORD_PTR)m_pFeature, (DWORD_PTR)attr);
+
 			pGroupInfo->SetData((DWORD_PTR)multiData); //데이터 구조를 셋팅해줍니다.
 
 			pAttrItemList.push_back(pGroupInfo);
@@ -297,7 +291,7 @@ void CMFCTestFileDlg::OnBnClickedButtonRefresh()
 			{
 				m_propertyList.AddProperty(pGroupInfo);
 			}
-		
+
 		}
 		m_propertyList.ExpandAll();
 	}
@@ -343,7 +337,7 @@ MultiData* CMFCTestFileDlg::InsertPropertyMultiData(int multidataType, CMFCPrope
 	multiData->data.push_back((DWORD_PTR)pointer_4);
 
 
-
+	
 	return multiData;
 
 }
@@ -361,9 +355,36 @@ int CMFCTestFileDlg::GetSelectedPropertyNum()
 
 CMFCTestFileDlg::~CMFCTestFileDlg()
 {
-	delete(m_pFeature);
+	delete m_pFeature;
+	
+	
 }
 
 
 
 
+
+
+void CMFCTestFileDlg::PostNcDestroy()
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	
+
+	CDialogEx::PostNcDestroy();
+}
+
+
+BOOL CMFCTestFileDlg::DestroyWindow()
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	int count = m_propertyList.GetPropertyCount();
+	for (int i = 0; i < count; i++)
+	{
+		auto property = m_propertyList.GetProperty(i);
+		auto data = (MultiData*)property->GetData();
+		delete data;
+
+	}
+	return CDialogEx::DestroyWindow();
+}
+	

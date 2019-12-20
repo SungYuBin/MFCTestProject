@@ -57,4 +57,6 @@ public:
 	
 	int CMFCTestFileDlg::GetSelectedPropertyNum();
 	void CMFCTestFileDlg::SetSelectedPropertyNum(int selected);
+	virtual void PostNcDestroy();
+	virtual BOOL DestroyWindow();
 };
