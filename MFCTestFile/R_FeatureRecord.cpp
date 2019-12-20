@@ -10,3 +10,4 @@ R_FeatureRecord::R_FeatureRecord()
 R_FeatureRecord::~R_FeatureRecord()
 {
 }
+

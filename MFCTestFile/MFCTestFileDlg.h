@@ -8,6 +8,7 @@
 #include "F_ATTR.h"
 #include <vector>
 #include"MultiData.h"
+#include "R_FeatureRecord.h"
 
 // CMFCTestFileDlg 대화 상자
 class CMFCTestFileDlg : public CDialogEx
@@ -40,10 +41,9 @@ public:
 	afx_msg void OnBnClickedButtonCancle();
 	afx_msg void OnBnClickedButtonRefresh();
 	CEdit propertyName;
-	//CMFCPropertyGridCtrl m_propertyList;
 	CPropertyGridAttributeModify m_propertyList;
-
 	int SelectedPropertyNum;
+	R_FeatureRecord* m_pFeature=nullptr;
 
 	std::vector<CMFCPropertyGridProperty*> pAttrItemList; //모든내역을 저장할 Attribute입니다.
 	bool ProgertyListInit();
@@ -52,10 +52,5 @@ public:
 	MultiData* InsertPropertyMultiData(int multidataType, CMFCPropertyGridProperty* pGP, DWORD_PTR pointer_1, DWORD_PTR pointer_2 = NULL, DWORD_PTR pointer_3 = NULL, DWORD_PTR pointer_4 = NULL);
 	
 	int CMFCTestFileDlg::GetSelectedPropertyNum();
-	void CMFCTestFileDlg::SetSelectedPropertyNum(CMFCPropertyGridProperty* selected);
-
-
-
-//	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	//afx_msg void OnStnClickedMfcpropertygridtest();
+	void CMFCTestFileDlg::SetSelectedPropertyNum(int selected);
 };

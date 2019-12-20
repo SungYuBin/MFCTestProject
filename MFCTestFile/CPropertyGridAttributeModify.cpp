@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CPropertyGridAttributeModify.h"
-
+#include "MultiData.h"
+#include "F_ATTR.h"
 
 CPropertyGridAttributeModify::CPropertyGridAttributeModify()
 {
@@ -22,21 +23,11 @@ void CPropertyGridAttributeModify::OnLButtonDown(UINT nFlags, CPoint point) //³ë
 	if (pProp != nullptr)
 	{
 		SetSelectedProPerty(pProp);
+		int Nodenumber = 0;
+		MultiData *multiData = (MultiData *)pProp->GetData();
+		ATTR *attr = (ATTR *)multiData->data[2];
+		Nodenumber = attr->m_atix;
 
-		auto count = this->GetPropertyCount();
-
-		for (int i = 0; i < count; i++)
-		{
-			auto property = this->GetProperty(i);
-			if (property == pProp)
-			{
-				CString Depthstring;
-				Depthstring.Format(_T("index°ª:%d ::::\n"), i);
-				OutputDebugString(Depthstring);
-
-
-			}
-		}
 	} 
 	else 
 	{
@@ -58,9 +49,9 @@ CMFCPropertyGridProperty* CPropertyGridAttributeModify::GetSelectedProPerty()
 	return SelectedProperty;
 }
 
-void CPropertyGridAttributeModify::SetSelectedPropertyNum(CMFCPropertyGridProperty* selected)
+void CPropertyGridAttributeModify::SetSelectedPropertyNum(int Num)
 {
-	SelectedPropertyNum = 0;
+	SelectedPropertyNum = Num;
 }
 
 int CPropertyGridAttributeModify::GetSelectedPropertyNum()

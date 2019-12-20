@@ -63,6 +63,8 @@ CMFCTestFileDlg::CMFCTestFileDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCTESTFILE_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_pFeature = nullptr;
+	AfxMessageBox(L"");
 }
 
 void CMFCTestFileDlg::DoDataExchange(CDataExchange* pDX)
@@ -184,30 +186,29 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 	{
 		int parentIndex = 0;
 		CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(name);
+
 		ATTR* attr = new ATTR();
 		F_ATTR* attrParent = NULL;
-		//최종 저장된 값은
-		if (proInforamtion.begin() != proInforamtion.end())
+		 
+		if (m_pFeature->m_attr.begin() != m_pFeature->m_attr.end())
 		{
-			attrParent = *proInforamtion.begin();
+			attrParent = *m_pFeature->m_attr.begin();
 		}
 		else
 		{
 			attrParent = new F_ATTR();
-			proInforamtion.push_back(attrParent);
+			m_pFeature->m_attr.push_back(attrParent);
 		}
 
-		MultiData *multiData = InsertPropertyMultiData(111, pGroupInfo, (DWORD_PTR)pGroupInfo, (DWORD_PTR)attr);
-		pGroupInfo->SetData((DWORD_PTR)multiData);
 
-		auto selectedListNode = m_propertyList. GetSelectedProPerty();
-		if (selectedListNode!=nullptr)
+
+		auto selectedListNode = m_propertyList.GetSelectedProPerty(); //선택한값이 있는경우
+		if (selectedListNode != nullptr)
 		{
 			selectedListNode->AddSubItem(pGroupInfo);
-			SetSelectedPropertyNum(selectedListNode);
-			parentIndex=GetSelectedPropertyNum();
-			attr->tempAA = selectedListNode;
-			//AfxMessageBox(L"모두 지웁니다.");
+			parentIndex = GetSelectedPropertyNum();
+
+
 			selectedListNode->Expand(FALSE);
 			selectedListNode->Expand(TRUE);
 
@@ -216,16 +217,18 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 		{
 			m_propertyList.AddProperty(pGroupInfo);
 		}
-		pAttrItemList.push_back(pGroupInfo);
 
 		attr->m_atix = GetATIX(attr->m_natc, parentIndex);
 		attr->m_paix = parentIndex;
 		attr->m_atin = 1;
 		attr->m_atvl = L"";
-		attr->name = name;
 		attrParent->m_arr.push_back(attr);
+														//type,CMFCPropertyGridProperty,R_FeatureRecord,ATTR
+		MultiData *multiData = InsertPropertyMultiData(111, pGroupInfo, (DWORD_PTR)m_pFeature, (DWORD_PTR)attr);
+		pGroupInfo->SetData((DWORD_PTR)multiData);
 
-		//m_propertyList.ExpandAll();
+		pAttrItemList.push_back(pGroupInfo);// 모든데이터를 저장합니다.
+
 	}
 	else
 	{
@@ -243,43 +246,63 @@ void CMFCTestFileDlg::OnBnClickedButtonCancle() //선택한 값을 삭제합니�
 	{
 		m_propertyList.DeleteProperty(selectedListNode);
 	}
-
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-
 }
 
 //기능::모든내용을 삭제하고 다시 원래 구조대로 다시 표출합니다.
 void CMFCTestFileDlg::OnBnClickedButtonRefresh() 
 {
-	AfxMessageBox(L"모두 지웁니다.");
-	while (m_propertyList.GetPropertyCount() > 0) //전부삭제
+	while (m_propertyList.GetPropertyCount() > 0)
 	{
 		//CMFCPropertyGridProperty* prop = m_propertyList.GetProperty(0);
 		//m_propertyList.DeleteProperty(prop);
 		m_propertyList.RemoveAll();
 		m_propertyList.ExpandAll();
 	}
-	//구조성공
 
-	//기존의 방식: 전부 삭제한 이후 , 저장된 값을 불러와서 진행합니다.
+	for (auto itorParent = m_pFeature->m_attr.begin(); itorParent != m_pFeature->m_attr.end(); itorParent++)
+	{
+		F_ATTR* attrParent = *itorParent;
 
- //	for (auto i = pAttrItemList.begin(); i != pAttrItemList.end(); i++) 
+		for (auto itor = attrParent->m_arr.begin(); itor != attrParent->m_arr.end(); itor++)
+		{
+			auto sdfsdf = itor;
+			OutputDebugString(L"");
+		}
+
+	}
+
+
+
+	//for (int i = 0; i < pAttrItemList.size(); i++) 
 	//{
-	//	try 
-	//	{
-	//		CMFCPropertyGridProperty* currentNode = *i;
-	//		m_propertyList.AddProperty(currentNode);// attribute로 추가합니다.
+	//	CMFCPropertyGridProperty* prop = pAttrItemList[i]; 
+	//	//해제된 메모리에 있는값을 접근하기 떄문에 문제가 발생합니다.
+	//	auto sfd = prop->GetName();
+	//	m_propertyList.AddProperty(prop);
+	
 
 
-	//	}
-	//	catch (int exceptionCode)
-	//	{
-
-	//	}
+	//	OutputDebugString(L"");
 	//}
 
 
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+
+	//다시 표출
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -294,6 +317,8 @@ bool CMFCTestFileDlg::ProgertyListInit() //기본셋팅입니다.
 	//pAttrItemList.push_back(pGroupInfo);
 	//pAttrItemList.push_back(pGroupInfodfs);
 		
+
+
 	return false;
 }
 
@@ -324,21 +349,8 @@ MultiData* CMFCTestFileDlg::InsertPropertyMultiData(int multidataType, CMFCPrope
 {
 	MultiData* multiData = new MultiData();
 
-	/*if (multidataType % 100 > 10)
-	{
-		m_propertyAttributeMultiData.insert(
-			std::unordered_map<CMFCPropertyGridProperty*, MultiData*>::value_type(pGP, multiData)
-		);
-	}
-	else
-	{
-		m_propertyVectorMultiData.insert(
-			std::unordered_map<CMFCPropertyGridProperty*, MultiData*>::value_type(pGP, multiData)
-		);
-	}*/
-
 	multiData->type = multidataType;
-	//multiData->data.push_back((DWORD_PTR)m_cell);
+	multiData->data.push_back((DWORD_PTR)nullptr); //cell
 	multiData->data.push_back((DWORD_PTR)pointer_1);
 	multiData->data.push_back((DWORD_PTR)pointer_2);
 	multiData->data.push_back((DWORD_PTR)pointer_3);
@@ -348,26 +360,9 @@ MultiData* CMFCTestFileDlg::InsertPropertyMultiData(int multidataType, CMFCPrope
 }
 
 
-void CMFCTestFileDlg::SetSelectedPropertyNum(CMFCPropertyGridProperty* selected)
+void CMFCTestFileDlg::SetSelectedPropertyNum(int selected)
 {
-	auto count = pAttrItemList.size();
-	for (int i = 0; i < count; i++) 
-	{
-		auto property = pAttrItemList[i];
-
-		if (property== m_propertyList.GetSelectedProPerty())
-		{
-			CString Depthstring;
-			Depthstring.Format(_T("index값:%d ::::\n"), i);
-			OutputDebugString(Depthstring);
-
-			 
-
-
-
-
-		}
-	}
+	SelectedPropertyNum = selected;
 }
 
 int CMFCTestFileDlg::GetSelectedPropertyNum()

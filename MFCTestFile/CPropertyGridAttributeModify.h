@@ -24,7 +24,7 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	void SetSelectedProPerty(CMFCPropertyGridProperty* selected);
 	CMFCPropertyGridProperty* GetSelectedProPerty();
-	void SetSelectedPropertyNum(CMFCPropertyGridProperty* selected);
+	void CPropertyGridAttributeModify::SetSelectedPropertyNum(int Num);
 	int GetSelectedPropertyNum();
 
 
