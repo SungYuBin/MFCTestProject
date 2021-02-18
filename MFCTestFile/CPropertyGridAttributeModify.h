@@ -26,10 +26,18 @@ public:
 	CMFCPropertyGridProperty* GetSelectedProPerty();
 	void CPropertyGridAttributeModify::SetSelectedPropertyNum(int Num);
 	int GetSelectedPropertyNum();
-
+	CMFCPropertyGridProperty *pSelectedProperty;
 
 private:
 	CMFCPropertyGridProperty* SelectedProperty;
 	int SelectedPropertyNum;
+
+public:
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnAttributeeditDelete();
+	afx_msg void OnAttributeeditOpen();
+
+
+
 };
 

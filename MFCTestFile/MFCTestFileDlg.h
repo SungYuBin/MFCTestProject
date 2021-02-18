@@ -42,7 +42,9 @@ public:
 	afx_msg void OnBnClickedButtonCancle();
 	afx_msg void OnBnClickedButtonRefresh();
 	CEdit propertyName;
+
 	CPropertyGridAttributeModify m_propertyList;
+
 	int SelectedPropertyNum; //선택된 노드의 값
 	int NodeNum = 1;//자기 자신의 노드값입니다.
 
@@ -59,4 +61,5 @@ public:
 	void CMFCTestFileDlg::SetSelectedPropertyNum(int selected);
 	virtual void PostNcDestroy();
 	virtual BOOL DestroyWindow();
+	afx_msg void OnStnClickedMfcpropertygridtest();
 };

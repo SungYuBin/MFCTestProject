@@ -188,6 +188,7 @@
     <ClInclude Include="MFCTestFile.h" />
     <ClInclude Include="MFCTestFileDlg.h" />
     <ClInclude Include="MultiData.h" />
+    <ClInclude Include="myGridProperty.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="R_FeatureRecord.h" />
     <ClInclude Include="stdafx.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="MFCTestFile.cpp" />
     <ClCompile Include="MFCTestFileDlg.cpp" />
     <ClCompile Include="MultiData.cpp" />
+    <ClCompile Include="myGridProperty.cpp" />
     <ClCompile Include="R_FeatureRecord.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -12,7 +12,7 @@
 #include "resource.h"
 #include <sstream>
 #include"MultiData.h"
-
+#include"myGridProperty.h"
 
 
 
@@ -80,12 +80,6 @@ BEGIN_MESSAGE_MAP(CMFCTestFileDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_ADD, &CMFCTestFileDlg::OnBnClickedButtonAdd)
 	ON_BN_CLICKED(IDC_BUTTON_CANCLE, &CMFCTestFileDlg::OnBnClickedButtonCancle)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CMFCTestFileDlg::OnBnClickedButtonRefresh)
-	//ON_STN_CLICKED(IDC_MFCPROPERTYGRIDTEST, &CMFCTestFileDlg::OnStnClickedMfcpropertygridtest)
-//	ON_WM_LBUTTONDOWN()
-//ON_WM_LBUTTONDOWN()
-//ON_WM_LBUTTONDOWN()
-//ON_WM_LBUTTONDOWN()
-//ON_STN_CLICKED(IDC_MFCPROPERTYGRIDTEST, &CMFCTestFileDlg::OnStnClickedMfcpropertygridtest)
 END_MESSAGE_MAP()
 
 
@@ -185,6 +179,7 @@ void CMFCTestFileDlg::OnBnClickedButtonAdd()
 	{
 		int parentIndex = 0;
 		CMFCPropertyGridProperty* pGroupInfo = new CMFCPropertyGridProperty(name);
+		//myGridProperty* pGroupInfo = new myGridProperty(name);
 
 		ATTR* attr = new ATTR();
 		F_ATTR* attrParent = NULL;
@@ -387,4 +382,5 @@ BOOL CMFCTestFileDlg::DestroyWindow()
 	}
 	return CDialogEx::DestroyWindow();
 }
-	
+
+
